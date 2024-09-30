@@ -8,3 +8,7 @@ connection = mysql.connector.connect(
          password='password',
          autocommit=True,
          )
+
+
+def connnection():
+    return None

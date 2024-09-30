@@ -3,6 +3,7 @@ from databaseconnection import connnection
 
 
 
+
 list_first_countries = ["Finland", "Cambodia", "Canada", "Peru", "Croatia", "South Africa", "Dubai"]
 first_country = random.choice(list_first_countries)
 
@@ -39,11 +40,11 @@ while points > 0 and hint_level < 7:
             if guess == hint:
                 if guess == 1:
                     points += 10
-                hint_level += 1
-                print(greetings)
-            else guess != hint:
-                points = point_counter()
-                print("Not this time, try again...")
+                    hint_level += 1
+                    print(greetings)
+                else guess != hint:
+                    points = point_counter()
+                    print("Not this time, try again...")
         elif game_movement == "NEW HINT":
             hints = retrieve_hints(country, level)
         else game_movement == "QUIT":
