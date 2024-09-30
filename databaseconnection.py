@@ -7,8 +7,6 @@ connection = mysql.connector.connect(
          user='newuser',
          password='password',
          autocommit=True,
+         collation='utf8mb4_bin'
          )
 
-
-def connnection():
-    return None

@@ -1,6 +1,6 @@
 import random
 from databaseconnection import connnection
-
+import func_retrieve_hints_per_level
 
 
 
@@ -26,7 +26,7 @@ print(f"Now we start our journey to fight {disease_name}...\n")
 names = disease_name
 country = ingredients
 ingredients = ingredient_country()
-hints = retrieve_hints(current_country, current_level)
+hints = func_retrieve_hints_per_level()
 points = 300
 hint_level = 1
 greetings = "Congratulations! You found this ingredient! Let's move on!"

@@ -17,7 +17,7 @@ def retrieve_hints(selected_country, current_level):
 
 print(retrieve_hints(selected_country='Canada', current_level=1))
 
-print(retrieve_hints(Canada,1))
+print(retrieve_hints("Canada",1))
 
 
 
