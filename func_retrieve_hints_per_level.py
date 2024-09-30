@@ -15,6 +15,8 @@ def retrieve_hints(selected_country, current_level):
             hint_list.append(hint_row[0])
     return hint_list
 
+print(retrieve_hints(selected_country='Canada', current_level=1))
+
 print(retrieve_hints(Canada,1))
 
 
