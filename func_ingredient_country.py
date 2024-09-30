@@ -5,7 +5,8 @@ connection = mysql.connector.connect(
         database='vaccine_voyage',
         user='root',
         password='06042004',
-        aoutocommit=True)
+        aoutocommit=True
+)
 
 def ingredient_country():
     sql = f"Select name from countries order by rand() limit 7"
