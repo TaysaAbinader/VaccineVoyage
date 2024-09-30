@@ -1,4 +1,6 @@
 import random
+from databaseconnection import connnection
+
 
 
 list_first_countries = ["Finland", "Cambodia", "Canada", "Peru", "Croatia", "South Africa", "Dubai"]
@@ -20,30 +22,33 @@ disease_name = input("What disease are you going to treat? \n")
 
 print(f"Now we start our journey to fight {disease_name}...\n")
 
-
-ingredients = ingredients_country()
-hints = retrieve_hints(country, level)
+names = disease_name
+country = ingredients
+ingredients = ingredient_country()
+hints = retrieve_hints(current_country, current_level)
 points = 300
 hint_level = 1
 greetings = "Congratulations! You found this ingredient! Let's move on!"
 
 
-while points <= 300 and hint_level < 7:
-    for hint in hint_levels:
+while points > 0 and hint_level < 7:
+    for movement in hint_levels:
         game_movement = input("What do you want to do: guess, new hint or quit?").upper
-        if game_movement == "guess":
+        if game_movement == "GUESS":
             guess = input("This ingredient is in: ")
             if guess == hint:
-                guess = True
+                if guess == 1:
+                    points += 10
                 hint_level += 1
                 print(greetings)
-            elif guess != hint:
-                guess = False
+            else guess != hint:
+                points = point_counter()
                 print("Not this time, try again...")
-            elif game_movement == "new hint":
-                new_hint = hint
-            else game_movement == "quit":
-                break()
+        elif game_movement == "NEW HINT":
+            hints = retrieve_hints(country, level)
+        else game_movement == "QUIT":
+            break()
+
     for hint in hints:
         if hint <= 6:
             hint = hints
