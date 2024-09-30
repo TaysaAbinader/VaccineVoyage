@@ -20,5 +20,30 @@ print(retrieve_hints(selected_country='Canada', current_level=1))
 print(retrieve_hints("Canada",1))
 
 
+def insert_data_disease_table(names, country, cursor):
+    sql1 = f"insert into vaccine_voyage.disease (disease_name, visited_country) values ('{names}', '{country}')"
+    return cursor.execute(sql1)
+
+def multiple_choice ():
+    multiple_choice_countries = ["Paraguay", "Ghana", "Ukraine", "Russia", "Cuba", "Guyana", "Lebanon", ]
+
+
+
+def ingredient_country():
+    sql = f"Select name from countries order by rand() limit 7"
+    print(sql)
+    cursor = connection.cursor()
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    list_country =[]
+
+    if cursor.rowcount >0 :
+        for row in result:
+            list_country.append(row[0])
+
+
+    return
+
+
 
 
