@@ -2,6 +2,8 @@ import random
 from databaseconnection import connection
 import functions_game
 from functions_game import insert_data_disease_table
+from functions_game import multiple_choice
+from functions_game import insert_session
 
 list_first_countries = ["Finland", "Cambodia", "Canada", "Peru", "Croatia", "South Africa", "Dubai"]
 first_country = random.choice(list_first_countries)
@@ -22,10 +24,9 @@ disease_name = input("What disease are you going to treat? \n")
 
 print(f"Now we start our journey to fight {disease_name}...\n")
 
-names = disease_name
 points = 300
 guess_count = 1
-greetings = "Congratulations! You found this ingredient! Let's move on!"
+guess = ""
 
 
 #randomize 7 countries, and assign 7 variables accordingly
@@ -49,72 +50,89 @@ for game_level in range(0,8):
         #example: in the 1st level final_country_list[0] - which is the 1st country, and enter into the current level parameter as 1 (0+1),
         #print(game_level)
         #print(final_country_list[game_level])
+
     hint_list = retrieve_hints(final_country_list[game_level],game_level+1)
-    print(game_level +1)
+    #print(final_country_list[game_level])
+    right_answer = final_country_list[game_level]
+    current_level = game_level + 1
+    #print(hint_list)
+    print('Level',current_level)
+
     for hint_number in range(0,7):
         print(hint_list[hint_number])
-        print('Your current points:', points)
+        level_status = ""
         game_movement = input("What do you want to do: guess, new hint or quit?\n").upper()
         while game_movement not in ["QUIT", "GUESS", "NEW HINT"]:
             game_movement = input("What do you want to do: guess, new hint or quit?\n").upper()
-
+            print('\n')
         #if commands to decide if they want to guess, new hint or quit; they said guess, then provide with a hint
         if game_movement == "GUESS":
-            guess = input(f"This ingredient is in: \n")
-            if guess == final_country_list[game_level]:
-                print(f"Superb! You found the ingredient number {hint_number}, let's move on\n")
-                countries_guessed.append(final_country_list[game_level])
-                if guess_count == 1:
-                    points += int(point_per_level(game_level +1))
-                    break
-                else:
-                    guess_count = 1
-            elif guess != final_country_list[game_level]:
+            guess = input(f"This ingredient is in: ").upper()
+            while guess != right_answer:
                 if points >= 0:
-                    if hint_number in [0,1,2,3,4,5,6]:
-                        points = points - int(point_per_level(game_level +1))
+                    if hint_number < 6:
+                        points = points - int(point_per_level(current_level))
                         guess_count += 1
-                        print('Your guess was wrong, please view the next hint and try again\n')
-                        current_country = final_country_list[game_level] game_movement = input("What do you want to do: guess, new hint or quit?\n").upper()
-                        while game_movement not in ["QUIT", "GUESS", "NEW HINT"]:
-                            game_movement = input("What do you want to do: guess, new hint or quit?\n").upper()
-                    if hint_number not in [0,1,2,3,4,5,6]:
-                        while guess != final_country_list[game_level]:
-                            print('You have used up all hints of this level, please pick your guess:')
-                            from functions_game import multiple_choice
-                            multiple_choice(final_country_list[game_level])
-                            while game_movement not in ["QUIT", "GUESS", "NEW HINT"]:
-                                game_movement = input("What do you want to do: guess, new hint or quit?\")
-                   #run function
-                    #input('what is the country you choose?')
-                    #while guess != final_country_list[game_level]
-                    ##input('what is the country you choose?') - 3 to 4 options
+                        print('Your guess was wrong, please view the next hint and try again')
+                        print('Your current points:', points)
+                        print('\n')
+                        break
+                    else:
+                        points = points - int(point_per_level(current_level)) * 1.5
+                        multiple_choice(final_country_list[game_level])
+                        print('Your current points:', points)
+                        guess = input(f"This ingredient is in: \n").upper()
                 else:
                     game_over = "Yes"
                     break
+
         elif game_movement == "NEW HINT":
-            points = points - int(point_per_level(game_level +1))
+            if guess_count < 6:
+                guess_count += 1
+                points = points - int(point_per_level(current_level))
+            else:
+                print('You have used up all hints of this level, please pick your guess!')
+                points = points - int(point_per_level(current_level)) * 2
+                print('Your current points:', points)
+                multiple_choice(right_answer)
+                while guess != right_answer:
+                    guess = input(f"This ingredient is in: ").upper()
+                    print('\n')
         elif game_movement == "QUIT":
             game_over = "Yes"
             print('Sorry to see you go. Come back soon!')
-            print('Your current records is', points, countries_guessed) #need to improve the code to show countries guess and insert record into the session table
+            print('Your current records is', points, countries_guessed)
+            print('\n')
             break
-
-
-
-
-
+        if guess == right_answer:
+            print(f"Congratulations! You have found ingredient number {current_level}, let's move on!\n")
+            countries_guessed.append(right_answer)
+            level_status = "success"
+            if guess_count == 1:
+                points = points + int(point_per_level(current_level))
+                print('Thanks to your quick thinking, you got some extra points. Your current points:', points)
+                print('\n')
+            else:
+                guess_count = 1
+            break
+        if (game_over == "Yes" or level_status == "success"):
+            break
     if game_over == "Yes":
         break
-if points > 0:
-    print('Congratulation, you have found all ingredients')
-else:
-    print('You failed to find all ingredients within the points given\n')
+#add the game session into database
+insert_session(disease_name,right_answer,current_level)
+print('Your game has been saved')
+
+if game_movement != "QUIT":
+    if points > 0:
+        print(f'Congratulation, you have found all ingredients with {points} points left.')
+    else:
+        print('GAME OVER - You failed to find all ingredients within the points given.\n')
 
 #need to improve the finishing lines
 decision = input('Do you want to retry or quit?').upper()
 if decision == "RETRY":
-    game_over = False
+    game_over = "No"
     points = 300
     guess_count = 1
 elif decision == "QUIT":
