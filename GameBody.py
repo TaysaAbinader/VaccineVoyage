@@ -71,12 +71,21 @@ for game_level in range(0,8):
                     guess_count = 1
             elif guess != final_country_list[game_level]:
                 if points >= 0:
-                    #if hint_number in [0,1,2,3,4,5,6]
-                    points = points - int(point_per_level(game_level +1))
-                    guess_count += 1
-                    print('Your guess was wrong, please view the next hint and try again\n')
-                    #if hint_number not in [0,1,2,3,4,5,6], give multiple choice
-                    #run function
+                    if hint_number in [0,1,2,3,4,5,6]:
+                        points = points - int(point_per_level(game_level +1))
+                        guess_count += 1
+                        print('Your guess was wrong, please view the next hint and try again\n')
+                        current_country = final_country_list[game_level] game_movement = input("What do you want to do: guess, new hint or quit?\n").upper()
+                        while game_movement not in ["QUIT", "GUESS", "NEW HINT"]:
+                            game_movement = input("What do you want to do: guess, new hint or quit?\n").upper()
+                    if hint_number not in [0,1,2,3,4,5,6]:
+                        while guess != final_country_list[game_level]:
+                            print('You have used up all hints of this level, please pick your guess:')
+                            from functions_game import multiple_choice
+                            multiple_choice(final_country_list[game_level])
+                            while game_movement not in ["QUIT", "GUESS", "NEW HINT"]:
+                                game_movement = input("What do you want to do: guess, new hint or quit?\")
+                   #run function
                     #input('what is the country you choose?')
                     #while guess != final_country_list[game_level]
                     ##input('what is the country you choose?') - 3 to 4 options
@@ -103,7 +112,7 @@ else:
     print('You failed to find all ingredients within the points given\n')
 
 #need to improve the finishing lines
-decision = input('Do you want to replay or quit?').upper()
+decision = input('Do you want to retry or quit?').upper()
 if decision == "RETRY":
     game_over = False
     points = 300
