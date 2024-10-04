@@ -50,40 +50,38 @@ def point_per_level(current_level):
             point_level = point_row[0]
     return point_level
 
-def randomize_countries (countries):
-    result = countries
-    if countries(len) > 4:
-        countries = random.shuffle(countries)
-        result = countries[:3]
-    if countries(len) <= 4:
-        result = random.shuffle(countries)
+def randomize_countries(countries):
+    new_list = countries
+    if len(new_list) > 4:
+        random.shuffle(new_list)
+        result = new_list[:3]
+    if len(new_list) <= 4:
+        random.shuffle(new_list)
+        result = new_list
     return result
 
 
+
 def multiple_choice (right_country):
-    sql = f"select countries.name from countries where countries.sort_id != {right_country};"
+    sql = f"select name from countries where name != '{right_country}';"
     listed_countries = []
-    multiple_options = []
-    multiple_options.append(right_country)
+    multiple_options = [right_country]
     cursor_count = connection.cursor()
     cursor_count.execute(sql)
     result = cursor_count.fetchall()
     if cursor_count.rowcount > 0:
         for row in result:
             listed_countries.append(row[0])
-        countries = listed_countries
-        randomize_countries(countries)
-        multiple_options.append(countries)
-        countries = multiple_options
-    print(randomize_countries(countries))
+        listed_countries1 = randomize_countries(listed_countries)
+        for i in listed_countries1:
+            multiple_options.append(i)
+    print('The ingredient may be in one of these countries: ',randomize_countries(multiple_options))
 
-
-
-
-
-
-def insert_session(disease_name,visited_countries):
-    sql_session = f""
+def insert_session(disease_name,visited_countries, current_level):
+    sql_session = f"insert into disease(disease_name, visited_countries,level) values ('{disease_name}',(select country_id from countries where name = '{visited_countries}'), '{current_level}');"
+    cursor_session = connection.cursor()
+    cursor_session.execute(sql_session)
+    return
 
 
 
