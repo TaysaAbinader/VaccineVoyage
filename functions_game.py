@@ -5,7 +5,6 @@ from mysql.connector import cursor
 
 from databaseconnection import connection
 
-
 def retrieve_hints(selected_country, current_level):
     #SQL query to retrieve 6 hints correlating to the selected country, randomly ordered
     sql_hint= (f"select hints.description from hints inner join countries on countries.country_id = hints.country_id where countries.name = '{selected_country}' and  hints.level = '{current_level}' order by rand();")

@@ -27,7 +27,7 @@ print(f"Now we start our journey to fight {disease_name}...\n")
 points = 300
 guess_count = 1
 guess = ""
-
+print(f"your starting points are:{points}")
 
 #randomize 7 countries, and assign 7 variables accordingly
 from functions_game import ingredient_country
@@ -90,6 +90,7 @@ for game_level in range(0,8):
             if guess_count < 6:
                 guess_count += 1
                 points = points - int(point_per_level(current_level))
+                print(f"Your current point: {points}")
             else:
                 print('You have used up all hints of this level, please pick your guess!')
                 points = points - int(point_per_level(current_level)) * 2
@@ -105,6 +106,7 @@ for game_level in range(0,8):
             print('\n')
             break
         if guess == right_answer:
+            print(f"Your current points: {points}")
             print(f"Congratulations! You have found ingredient number {current_level}, let's move on!\n")
             countries_guessed.append(right_answer)
             level_status = "success"
@@ -169,7 +171,7 @@ elif decision == "QUIT":
             hint = hints
             points = point_counter()
         elif hint > 6:
-            hint = muliple_choice
+            hint = multiple_choice
             points = point_counter()
 
 """
